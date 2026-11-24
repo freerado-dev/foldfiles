@@ -16,6 +16,15 @@ android {
         versionName = "2.1"
     }
 
+    // Pevný podpis, aby sa nové buildy z GitHubu dali nainštalovať ako aktualizácia
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file("debug.keystore")
+            storePassword = "foldfiles"
+            keyAlias = "foldfiles"
+            keyPassword = "foldfiles"
+        }
+    }
     buildTypes {
         release {
             isMinifyEnabled = true
