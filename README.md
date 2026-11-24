@@ -17,7 +17,7 @@ Dvojpanelový správca súborov pre Samsung Galaxy Z Fold (Kotlin + Jetpack Comp
 **Android Studio:** File → Open → priečinok `FoldFiles` → Run (alebo Build → Build APK).
 
 **GitHub:** každý push na `main` zostaví APK a zverejní ho tu:
-https://github.com/freerado-dev/foldfiles/releases/download/latest/FoldFiles-debug.apk
+https://github.com/freerado-dev/foldfiles/releases/download/latest/FoldFiles.apk
 
 ## Prvé spustenie
 Aplikácia si vypýta povolenie **Prístup ku všetkým súborom** (Android 11+).
