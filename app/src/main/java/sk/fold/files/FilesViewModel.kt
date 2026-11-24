@@ -43,6 +43,7 @@ class PaneState(start: File) {
     }
 }
 
+data class ViewerState(val items: List<FileItem>, val start: Int)
 data class Clip(val paths: List<String>, val move: Boolean)
 data class PendingTransfer(val paths: List<String>, val dest: File, val opposite: Boolean, val fromPane: Int)
 
@@ -64,6 +65,7 @@ class FilesViewModel(app: Application) : AndroidViewModel(app) {
         private set
     var clip by mutableStateOf<Clip?>(null)
     var pending by mutableStateOf<PendingTransfer?>(null)
+    var viewer by mutableStateOf<ViewerState?>(null)
     var roots by mutableStateOf<List<StorageRoot>>(emptyList())
         private set
     var bookmarks by mutableStateOf(loadBookmarks())
@@ -313,6 +315,24 @@ class FilesViewModel(app: Application) : AndroidViewModel(app) {
             FileOps.transfer(c.paths.map(::File), dest, c.move)
         }
     }
+
+    /* ---------- Prehliadač ---------- */
+
+    fun openViewer(i: Int, item: FileItem) {
+        val media = panes[i].visibleRows().filterIsInstance<Row.Item>().map { it.item }.filter { it.isMedia }
+        val start = media.indexOfFirst { it.path == item.path }.coerceAtLeast(0)
+        if (media.isNotEmpty()) viewer = ViewerState(media, start)
+    }
+
+    /** „Interná pamäť/DCIM/Camera“ */
+    fun displayPath(dir: File?): String {
+        if (dir == null) return ""
+        val r = rootOf(dir)
+        val rel = dir.path.removePrefix(r.path).trim('/')
+        return if (rel.isEmpty()) rootTitle(r) else rootTitle(r) + "/" + rel
+    }
+
+    fun trashFiles(files: List<File>) = runOp("Presunuté do koša") { Trash.moveToTrash(files) }
 
     /* ---------- Ďalšie operácie ---------- */
 

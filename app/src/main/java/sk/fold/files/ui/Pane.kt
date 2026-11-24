@@ -225,6 +225,7 @@ private fun PaneContent(vm: FilesViewModel, index: Int, selectionMode: Boolean, 
                 when {
                     selectionMode || inTrash -> vm.toggleSelect(index, item.path)
                     item.isDir -> vm.open(index, item.file)
+                    item.isMedia -> vm.openViewer(index, item)
                     else -> openFile(ctx, item.file)
                 }
             },

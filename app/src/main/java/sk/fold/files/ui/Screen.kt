@@ -149,6 +149,8 @@ fun FilesApp(vm: FilesViewModel = viewModel()) {
                 if (vm.busy) LinearProgressIndicator(Modifier.fillMaxWidth().align(Alignment.TopCenter), color = Amber)
                 SnackbarHost(snackbar, Modifier.align(Alignment.BottomCenter).padding(bottom = 64.dp))
             }
+            // Prehliadač fotiek a videí cez celú obrazovku
+            vm.viewer?.let { MediaViewer(vm, it) }
         }
     }
 
