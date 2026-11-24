@@ -86,6 +86,18 @@ object FileOps {
         else Result(0, listOf("Premenovanie zlyhalo"))
     }
 
+    fun mkfile(parent: File, name: String): Result {
+        val clean = name.trim()
+        if (clean.isEmpty() || clean.contains('/')) return Result(0, listOf("Neplatné meno"))
+        val f = File(parent, clean)
+        if (f.exists()) return Result(0, listOf("$clean už existuje"))
+        return try {
+            if (f.createNewFile()) Result(1, emptyList()) else Result(0, listOf("Súbor sa nepodarilo vytvoriť"))
+        } catch (e: Exception) {
+            Result(0, listOf(e.message ?: "Chyba"))
+        }
+    }
+
     fun mkdir(parent: File, name: String): Result {
         val clean = name.trim()
         if (clean.isEmpty() || clean.contains('/')) return Result(0, listOf("Neplatné meno"))

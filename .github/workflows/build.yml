@@ -16,7 +16,17 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
       - run: chmod +x gradlew
       - name: Assemble APK
-        run: ./gradlew assembleDebug --stacktrace
+        run: |
+          set -o pipefail
+          ./gradlew assembleDebug --console=plain 2>&1 | tee build.log
+      - name: Publish build log on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          grep -E "^e: |error:|FAILURE|What went wrong" -A3 build.log > build-errors.txt || true
+          gh release delete build-log --yes --cleanup-tag || true
+          gh release create build-log build.log build-errors.txt --title "Build log" --notes "Chyba buildu z ${GITHUB_SHA::7}" --prerelease --target "$GITHUB_SHA"
       - uses: actions/upload-artifact@v4
         with:
           name: foldfiles-debug-apk
